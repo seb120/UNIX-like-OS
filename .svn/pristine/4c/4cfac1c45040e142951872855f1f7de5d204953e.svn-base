@@ -1,0 +1,23 @@
+# syscall_table.S - Handles system calls
+# vim:ts=4 noexpandtab
+
+#define ASM     1
+
+# contains table for function pointers
+.text
+.globl syscall_table
+.data
+
+
+syscall_table:
+		.long halt
+		.long execute
+		.long read
+		.long write
+		.long open
+		.long close
+		.long getargs
+		.long vidmap
+#		.long set_handler
+#		.long sigreturn
+# ^E.C.

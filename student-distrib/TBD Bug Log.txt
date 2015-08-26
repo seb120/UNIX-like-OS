@@ -1,0 +1,45 @@
+Checkpoint#1:
+	
+	Bug: We did not receive interrupts from the RTC. When writing the RTC handler, we forgot to read the RTC port after sending the EOI, so the RTC did not send a new interrupt. Time to fix = 1 hour.
+	
+	Bug: The keyboard handler would stop working after the first keypress. We solved this problem by creating an assembly wrapper for our code to ensure the registers were being saved properly. Time to fix = 1 hour.
+	
+	Bug: Page faults due to incorrect alignment of the 4kB boundaries. Fixed by using .align label. Time to fix = 3 hours.
+
+Checkpoint#2:
+	
+	Bug: Terminal would not scroll properly during certain buffer writes. Resolved by rewriting code to check for additional constraints. Added additional variables to keep track of the current line and cursor positions. Time to fix = 4 hours.
+	
+	Bug: Terminal would not clear the screen properly. This was because the previous input buffer was not reset at the same time. Time to fix = 3 hours.
+	
+	Bug: Keyboard Handler would not properly handle multiple keypresses. We fixed this by adding additional checks for keys being released. We also added flags to check for modifier keys like CTRL. In addition, sometimes the system would throw an exception, this was discovered to be caused by a missing cli/sti critical section for this handler, which caused the terminal code to break when it was interrupted. Time to fix = 3 hours.
+	
+	Bug: ls would not properly print out the entire directory. This was fixed by rewriting the filesystem read functions to separate them for files and directories. Time to fix = 5 hours.
+	
+	Bug: RTC driver stopped working. This was due to incorrect synchronization of the flags for the interrupt handler, which caused a dead lock. Time to fix = 2 hours.
+
+Checkpoint#3:
+
+	Bug: Halt did not work. This was due to not reloading the correct kernel stack pointer in (&tss) when switching to the parent process. Time to fix = 5 hours.
+		
+	Bug: Interrupts were not being re-enabled after a system call. We solved this by checking the flow of our code and making sure the interrupt flag was reset after the syscall. Time to fix = 1 hour.
+	
+	Bug: execute did not work. this was due to an error in the way the command line arguments were checked and split for the creating the new process. Time to fix = 5 hours.
+
+Checkpoint#4:
+
+	Bug: Sometimes the OS would throw an page fault when handling RTC interrupts. We fixed this problem by doing an inline ASM pushal/popal and using IRET to return to the previous CPU state. This was obvious in a big program like counter. Time to fix = 2 hours.
+	
+	Bug: When doing CTRL-C to halt a process, the system would not respond again. This was due to not sending EOI for the keyboard handler. Time to fix = 1 hour.
+	
+	Bug: Exiting the first shell would cause a triple fault. This was fixed by relaunching execute("shell") if this condition was detected. Time to fix = 1/2 hour.
+
+	Bug: Fish program was not working completely, this was discovered to be caused by a filesystem read mistake, where the offset was not correctly implemented. Time to fix = 3 hours.
+
+Checkpoint#5:
+
+	Bug: The terminal_switch function was causing a page fault due to the order of operations occurring in system call halt. The current_pcb was being first incorrectly destroyed and having its elements referenced later when trying to reload the page directory for the new process. Time to fix = 10 hours.
+	
+	Bug: enabling PIT interrupts was causing a page fault. This was do to not saving the registers before the interrupt handler. Time to fix = 1 hour.
+	
+	Bug: Scheduling did not work. This was due to incorrect setup of the stack for IRET to use. Time to fix = ? hours.
